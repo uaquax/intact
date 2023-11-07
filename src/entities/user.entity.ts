@@ -85,7 +85,6 @@ export class SerializedUser {
   description: string;
   level: number;
   accountType: AccountType;
-  balance: number;
   country: string;
   language: string;
   gender: string;
@@ -94,6 +93,9 @@ export class SerializedUser {
 
   @Exclude()
   password: string;
+
+  @Exclude()
+  balance: number;
 
   @Exclude()
   hashedRt: string;

@@ -14,19 +14,21 @@ export class UsersService {
   ) {}
 
   async createUser(user: User): Promise<User> {
-    return await this.usersRepository.save(user);
-  }
-
-  async getUsers(): Promise<User[]> {
-    return await this.usersRepository.find();
+    return plainToClass(SerializedUser, await this.usersRepository.save(user));
   }
 
   async findByEmail(email: string) {
-    return await this.usersRepository.findOneBy({ email });
+    return plainToClass(
+      SerializedUser,
+      await this.usersRepository.findOneBy({ email })
+    );
   }
 
   async findById(id: string) {
-    return await this.usersRepository.findOneBy({ id });
+    return plainToClass(
+      SerializedUser,
+      await this.usersRepository.findOneBy({ id })
+    );
   }
 
   async updateUser(id: string, user: User): Promise<User> {
@@ -42,7 +44,7 @@ export class UsersService {
     const user = await this.usersRepository.findOneBy({ id });
     user.hashedRt = hash;
 
-    return await this.usersRepository.save(user);
+    return plainToClass(SerializedUser, await this.usersRepository.save(user));
   }
 
   async signUp(userParams: UserParams): Promise<SerializedUser> {
@@ -70,6 +72,6 @@ export class UsersService {
 
     user.lastActive = new Date();
 
-    return await this.usersRepository.save(user);
+    return plainToClass(SerializedUser, await this.usersRepository.save(user));
   }
 }

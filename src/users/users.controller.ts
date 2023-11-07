@@ -30,7 +30,7 @@ export class UsersController {
 
   @Public()
   @Get("last_active/:id")
-  async getUserLastActive(@Param() id: string) {
+  async getUserLastActive(@Param("id") id: string) {
     return {
       last_active: (await this.usersService.findById(id)).lastActive,
     };
