@@ -9,19 +9,37 @@ import {
 } from "@nestjs/common";
 import { User } from "../entities/user.entity";
 import { UsersService } from "./users.service";
+import { GetUser } from "src/auth/decorators/get-user.decorator";
+import { Public } from "src/auth/decorators/public.decorator";
 
-@Controller("users")
+@Controller("api/users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  getUsers(): Promise<User[]> {
-    return this.usersService.getUsers();
+  @Post("last_active/update")
+  async updateLastActive(@GetUser("sub") id: string) {
+    await this.usersService.updateLastActive(id);
   }
 
+  @Get("last_active")
+  async getLastActive(@GetUser("sub") id: string) {
+    return {
+      last_active: (await this.usersService.findById(id)).lastActive,
+    };
+  }
+
+  @Public()
+  @Get("last_active/:id")
+  async getUserLastActive(@Param() id: string) {
+    return {
+      last_active: (await this.usersService.findById(id)).lastActive,
+    };
+  }
+
+  @Public()
   @Get(":id")
   getUserById(@Param("id") id: string): Promise<User> {
-    return this.usersService.getUserById(id);
+    return this.usersService.findById(id);
   }
 
   @Post()
